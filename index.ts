@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import * as cron from 'node-cron';
 
 dotenv.config();
 
@@ -11,8 +12,7 @@ const { SLACK_WEBHOOK_URL } = process.env;
 
 const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
 
-// Main function
-(async () => {
+cron.schedule('0 10 * * 1-5', async () => {
   const { questions } = await getData(LEETCODE_RECOMMENDED_LIST_URL);
   const ids = generateListIds(questions);
   const allData = await getData(LEETCODE_ALL_QUESTION_URL);
@@ -29,7 +29,7 @@ const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
   );
 
   postQuestion(text);
-})();
+});
 
 // API call
 async function getData(url) {
