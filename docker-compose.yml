@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  main:
-    container_name: main
+  leetcodebot:
+    container_name: leetcodebot
     build: .
     restart: unless-stopped
     environment:
