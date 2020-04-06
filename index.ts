@@ -12,7 +12,7 @@ const { SLACK_WEBHOOK_URL } = process.env;
 
 const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
 
-cron.schedule('0 10 * * 1-5', async () => {
+async function main() {
   const { questions } = await getData(LEETCODE_RECOMMENDED_LIST_URL);
   const ids = generateListIds(questions);
   const allData = await getData(LEETCODE_ALL_QUESTION_URL);
@@ -29,7 +29,10 @@ cron.schedule('0 10 * * 1-5', async () => {
   );
 
   postQuestion(text);
-});
+}
+
+cron.schedule('0 10 * * 1-5', main);
+main();
 
 // API call
 async function getData(url) {
@@ -43,7 +46,8 @@ async function getData(url) {
 // Get all non-paid questions
 function getFreeQuestions(data) {
   return data.stat_status_pairs.filter(
-    ({ difficulty, paid_only }) => difficulty.level === 1 && !paid_only,
+    ({ difficulty, paid_only }) =>
+      (difficulty.level === 1 || difficulty.level === 2) && !paid_only,
   );
 }
 
